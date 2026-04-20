@@ -12,8 +12,21 @@ export async function POST(req: NextRequest) {
   try {
     await dbConnect();
     const data = await req.json();
-    const department = await Department.create(data);
+
+    const departmentData: any = {
+      name: data.name,
+      code: data.code.toUpperCase(),
+      college: data.college,
+      status: data.status ? data.status.toLowerCase() : 'active',
+    };
+
+    if (data.headOfDepartment && data.headOfDepartment.trim() !== "") {
+      departmentData.headOfDepartment = data.headOfDepartment;
+    }
+
+    const department = await Department.create(departmentData);
     return NextResponse.json(department, { status: 201 });
+
   } catch (error: any) {
     if (error.code === 11000) {
       return NextResponse.json({ error: 'Department code already exists' }, { status: 400 });

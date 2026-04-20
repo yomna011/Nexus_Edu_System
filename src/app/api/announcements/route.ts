@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 
     if (!showAll) {
       // Regular user: only active and non-expired announcements targeted to their role or ALL
-      query.isActive = true;
+      query.isactive = true;
       query.$or = [
         { expiresAt: { $exists: false } },
         { expiresAt: { $gt: now } },

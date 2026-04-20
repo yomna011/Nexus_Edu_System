@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const active = searchParams.get('active');
   const query: any = {};
-  if (active === 'true') query.status = 'ACTIVE';
+  if (active === 'true') query.status = 'active';
   const semesters = await Semester.find(query).sort({ createdAt: -1 });
   return NextResponse.json(semesters);
 }

@@ -5,7 +5,7 @@ export interface IDepartment {
   code: string;
   college: string;
   headOfDepartment?: mongoose.Types.ObjectId;
-  status: 'ACTIVE' | 'INACTIVE';
+  status: 'active' | 'inactive';
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,7 +16,7 @@ const DepartmentSchema = new Schema<IDepartment>(
     code: { type: String, required: true, unique: true, uppercase: true },
     college: { type: String, required: true },
     headOfDepartment: { type: Schema.Types.ObjectId, ref: 'User' },
-    status: { type: String, enum: ['ACTIVE', 'INACTIVE'], default: 'ACTIVE' },
+    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
   },
   { timestamps: true }
 );

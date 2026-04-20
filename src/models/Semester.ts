@@ -8,7 +8,7 @@ export interface ISemester {
   endDate: Date;
   addDropDeadline: Date;
   finalExamStart: Date;
-  status: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+  status: 'DRAFT' | 'active' | 'ARCHIVED';
   isRegistrationTerm: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -23,7 +23,7 @@ const SemesterSchema = new Schema<ISemester>(
     endDate: { type: Date, required: true },
     addDropDeadline: { type: Date, required: true },
     finalExamStart: { type: Date, required: true },
-    status: { type: String, enum: ['DRAFT', 'ACTIVE', 'ARCHIVED'], default: 'DRAFT' },
+    status: { type: String, enum: ['DRAFT', 'active', 'ARCHIVED'], default: 'DRAFT' },
     isRegistrationTerm: { type: Boolean, default: false },
   },
   { timestamps: true }

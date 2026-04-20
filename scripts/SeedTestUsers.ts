@@ -31,7 +31,7 @@ async function seedTestUsers() {
       name: 'Computer Science',
       code: 'CS',
       college: 'Faculty of Engineering',
-      status: 'ACTIVE',
+      status: 'active',
     });
     console.log('Created CS department');
   }
@@ -42,7 +42,7 @@ async function seedTestUsers() {
       name: 'Mathematics',
       code: 'MATH',
       college: 'Faculty of Science',
-      status: 'ACTIVE',
+      status: 'active',
     });
     console.log('Created MATH department');
   }
@@ -62,7 +62,7 @@ async function seedTestUsers() {
   }
   console.log('Rooms ensured');
 
-  // Active Semester
+  // active Semester
   let semester = await Semester.findOne({ name: 'Fall 2026', academicYear: '2026' });
   if (!semester) {
     semester = await Semester.create({
@@ -73,7 +73,7 @@ async function seedTestUsers() {
       endDate: new Date('2026-12-20'),
       addDropDeadline: new Date('2026-09-15'),
       finalExamStart: new Date('2026-12-10'),
-      status: 'ACTIVE',
+      status: 'active',
       isRegistrationTerm: true,
     });
     console.log('Created active semester:', semester.name);

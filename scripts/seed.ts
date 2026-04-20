@@ -46,7 +46,7 @@ async function seed() {
       name: 'Computer Science',
       code: 'CS',
       college: 'Faculty of Engineering',
-      status: 'ACTIVE',
+      status: 'active',
     },
     { upsert: true, new: true }
   );
@@ -56,7 +56,7 @@ async function seed() {
       name: 'Mathematics',
       code: 'MATH',
       college: 'Faculty of Science',
-      status: 'ACTIVE',
+      status: 'active',
     },
     { upsert: true, new: true }
   );
@@ -77,7 +77,7 @@ async function seed() {
   }
   console.log('🚪 Rooms seeded');
 
-  // 4. Create Active Semester
+  // 4. Create active Semester
   const semester = await Semester.findOneAndUpdate(
     { name: 'Fall 2026', academicYear: '2026' },
     {
@@ -88,12 +88,12 @@ async function seed() {
       endDate: new Date('2026-12-20'),
       addDropDeadline: new Date('2026-09-15'),
       finalExamStart: new Date('2026-12-10'),
-      status: 'ACTIVE',
+      status: 'active',
       isRegistrationTerm: true,
     },
     { upsert: true, new: true }
   );
-  console.log('📅 Active semester:', semester.name);
+  console.log('📅 active semester:', semester.name);
 
   // 5. Create Sample Courses (optional, but useful for testing)
   const courses = [

@@ -28,7 +28,7 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
   const [studentData, setStudentData] = useState<any>(null);
   const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
-  const [activeSemester, setActiveSemester] = useState<any>(null);
+  const [activeSemester, setactiveSemester] = useState<any>(null);
   const [cartCount, setCartCount] = useState(0);
   const [announcements, setAnnouncements] = useState<any[]>([]);
 
@@ -43,7 +43,7 @@ export default function StudentDashboard() {
         // Fetch active semester
         const semRes = await fetch('/api/semesters?active=true');
         const semData = await semRes.json();
-        setActiveSemester(semData[0] || null);
+        setactiveSemester(semData[0] || null);
 
         // Fetch enrollments for active semester
         const enrollRes = await fetch('/api/enrollments');
@@ -179,7 +179,7 @@ export default function StudentDashboard() {
             <div className="text-2xl font-bold flex items-center gap-2">
               {activeSemester?.isRegistrationTerm ? 'Open' : 'Closed'}
               <Badge variant={activeSemester?.isRegistrationTerm ? 'default' : 'secondary'}>
-                {activeSemester?.isRegistrationTerm ? 'Active' : 'Inactive'}
+                {activeSemester?.isRegistrationTerm ? 'active' : 'inactive'}
               </Badge>
             </div>
             {activeSemester?.addDropDeadline && (

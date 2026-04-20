@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { Calendar as BigCalendar, momentLocalizer, Views, View } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -30,6 +30,29 @@ export default function RoomCalendarPage() {
     course: '',
   });
   const [loading, setLoading] = useState(false);
+
+  const { min, max } = useMemo(() => ({
+    min: moment().set({ hour: 8, minute: 0, second: 0, millisecond: 0 }).toDate(),
+    max: moment().set({ hour: 20, minute: 0, second: 0, millisecond: 0 }).toDate(),
+  }), []);
+
+  const components = useMemo(() => ({
+    header: ({ label }: any) => (
+      <div className="py-3 font-bold text-xs text-slate-600 bg-slate-50 uppercase tracking-widest">
+        {label}
+      </div>
+    ),
+    timeSlotWrapper: ({ children }: any) => (
+      <div className="hover:bg-slate-50 transition-colors">{children}</div>
+    ),
+  }), []);
+
+  const eventPropGetter = useCallback(() => ({
+    className: "!bg-primary !border-primary-foreground/20 rounded-md shadow-sm text-xs",
+    style: {
+      backgroundColor: '#3b82f6',
+    }
+  }), []);
 
   const fetchData = useCallback(async () => {
     try {
@@ -111,18 +134,46 @@ export default function RoomCalendarPage() {
 
   return (
     <div className="p-6 space-y-4 h-[calc(100vh-100px)]">
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        /* Remove default header borders for our custom component */
+        .rbc-header {
+          border-bottom: 1px solid #e2e8f0 !important;
+          padding: 0 !important;
+        }
+        /* Style the left-side time column */
+        .rbc-time-gutter .rbc-timeslot-group {
+          border-bottom: 1px solid #f1f5f9 !important;
+          font-size: 0.75rem !important;
+          color: #64748b !important;
+          font-weight: 500 !important;
+          padding-right: 8px !important;
+        }
+        /* Clean up the grid lines */
+        .rbc-time-content {
+          border-top: 2px solid #e2e8f0 !important;
+        }
+        .rbc-day-slot .rbc-time-slot {
+          border-top: 1px solid #f1f5f9 !important;
+        }
+        /* Style the "Today" highlight */
+        .rbc-today {
+          background-color: #f8fafc !important;
+        }
+      `}} />
+
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Room Booking Calendar</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Room Booking Calendar</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button><Plus className="mr-2 h-4 w-4" /> Book Room</Button>
+            <Button className="shadow-sm"><Plus className="mr-2 h-4 w-4" /> Book Room</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader><DialogTitle>Book a Room</DialogTitle></DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Label>Room</Label>
-                <Select value={form.room} onValueChange={(v) => setForm({...form, room: v})} required>
+                <Select value={form.room} onValueChange={(v) => setForm({ ...form, room: v })} required>
                   <SelectTrigger><SelectValue placeholder="Select room" /></SelectTrigger>
                   <SelectContent>
                     {rooms.map((room: any) => (
@@ -135,33 +186,33 @@ export default function RoomCalendarPage() {
               </div>
               <div>
                 <Label>Title</Label>
-                <Input value={form.title} onChange={(e) => setForm({...form, title: e.target.value})} required />
+                <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
               </div>
               <div>
                 <Label>Description (optional)</Label>
-                <Textarea value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} />
+                <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Start Time</Label>
-                  <Input type="datetime-local" value={form.startTime} onChange={(e) => setForm({...form, startTime: e.target.value})} required />
+                  <Input type="datetime-local" value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} required />
                 </div>
                 <div>
                   <Label>End Time</Label>
-                  <Input type="datetime-local" value={form.endTime} onChange={(e) => setForm({...form, endTime: e.target.value})} required />
+                  <Input type="datetime-local" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} required />
                 </div>
               </div>
               <div>
                 <Label>Course (optional)</Label>
-                <Input value={form.course} onChange={(e) => setForm({...form, course: e.target.value})} placeholder="Course ID" />
+                <Input value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })} placeholder="Course ID" />
               </div>
-              <Button type="submit" disabled={loading}>{loading ? 'Booking...' : 'Confirm Booking'}</Button>
+              <Button type="submit" className="w-full" disabled={loading}>{loading ? 'Booking...' : 'Confirm Booking'}</Button>
             </form>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="bg-white rounded-lg border h-full">
+      <div className="bg-white rounded-xl border border-slate-200 h-full overflow-hidden shadow-sm">
         <BigCalendar
           localizer={localizer}
           events={bookings}
@@ -176,6 +227,10 @@ export default function RoomCalendarPage() {
           onSelectSlot={handleSelectSlot}
           onSelectEvent={handleSelectEvent}
           views={[Views.MONTH, Views.WEEK, Views.DAY]}
+          min={min}
+          max={max}
+          components={components}
+          eventPropGetter={eventPropGetter}
         />
       </div>
     </div>

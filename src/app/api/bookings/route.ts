@@ -7,11 +7,6 @@ import { getSession } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     await dbConnect();
     const { searchParams } = new URL(req.url);
     const roomId = searchParams.get('roomId');
@@ -26,18 +21,12 @@ export async function GET(req: NextRequest) {
     }
 
     const bookings = await Booking.find(query)
-      .populate('room', 'name building')
-      .populate('bookedBy', 'name email')
-      .populate('course', 'code title')
+      .populate('room', 'name building status')
       .sort({ startTime: 1 });
 
     return NextResponse.json(bookings);
   } catch (error: any) {
-    console.error('GET /api/bookings error:', error);
-    return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 

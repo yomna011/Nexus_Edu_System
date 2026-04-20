@@ -129,7 +129,7 @@ export default function AdminDashboard() {
           totalStudents: students.length,
           totalProfessors: professors.length,
           totalCourses: courses.length,
-          activeDepartments: departments.filter((d: any) => d.status === 'ACTIVE').length,
+          activeDepartments: departments.filter((d: any) => d.status === 'active').length,
           activeSemester: activeSemesters[0]?.name || 'None',
           pendingRegistrations: 0, // Could be from a registrations endpoint
         });
@@ -210,7 +210,7 @@ export default function AdminDashboard() {
           loading={loading}
         />
         <StatCard
-          title="Active Courses"
+          title="active Courses"
           value={stats.totalCourses}
           description={`Current semester: ${stats.activeSemester}`}
           icon={BookOpen}
@@ -219,7 +219,7 @@ export default function AdminDashboard() {
         <StatCard
           title="Departments"
           value={stats.activeDepartments}
-          description="Active departments"
+          description="active departments"
           icon={Building2}
           loading={loading}
         />
@@ -285,7 +285,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <span className="text-sm">Registration Period</span>
               <Badge variant="outline" className="bg-green-50">
-                Active
+                active
               </Badge>
             </div>
             <div className="flex items-center justify-between">

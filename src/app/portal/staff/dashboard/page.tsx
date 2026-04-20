@@ -26,7 +26,7 @@ export default function StaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [staffData, setStaffData] = useState<any>(null);
   const [assignedCourses, setAssignedCourses] = useState<any[]>([]);
-  const [activeSemester, setActiveSemester] = useState<any>(null);
+  const [activeSemester, setactiveSemester] = useState<any>(null);
   const [todaySchedule, setTodaySchedule] = useState<any[]>([]);
   const [totalStudents, setTotalStudents] = useState(0);
   const [myBookings, setMyBookings] = useState<any[]>([]);
@@ -43,7 +43,7 @@ export default function StaffDashboard() {
         const semRes = await fetch('/api/semesters?active=true');
         const semData = await semRes.json();
         const activeSem = semData[0] || null;
-        setActiveSemester(activeSem);
+        setactiveSemester(activeSem);
 
         // 3. Fetch courses assigned to this staff member for the active semester
         if (activeSem && session?._id) {

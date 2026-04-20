@@ -12,10 +12,10 @@ import {
   UserPlus,
   BookMarked,
   ShoppingCart,
-  Search,
   Loader2,
    DoorOpen,
-   Megaphone
+   Megaphone,
+   Clock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -40,12 +40,14 @@ const studentNav: NavItem[] = [
   { name: 'Dashboard', href: '/portal/student/dashboard', icon: LayoutDashboard },
   { name: 'Catalog', href: '/portal/student/catalog', icon: BookMarked },
   { name: 'Cart', href: '/portal/student/cart', icon: ShoppingCart },
+  { name: 'Directory', href: '/portal/student/directory', icon: Users },
 ];
 
 const staffNav: NavItem[] = [
   { name: 'Dashboard', href: '/portal/staff/dashboard', icon: LayoutDashboard },
   { name: 'Directory', href: '/portal/staff/directory', icon: Users },
-  { name: 'Room Calendar', href: '/portal/staff/calendar', icon: Calendar },
+  { name: 'Booking', href: '/portal/staff/calendar', icon: Clock  },
+  { name: 'Available Rooms', href: '/portal/staff/available', icon: Calendar },
 ];
 
 export function Sidebar() {
@@ -104,14 +106,14 @@ export function Sidebar() {
       </div>
       <nav className="flex-1 p-4 space-y-1">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+          const isactive = pathname === item.href || pathname.startsWith(item.href + '/');
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
                 'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                isActive
+                isactive
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-muted'
               )}

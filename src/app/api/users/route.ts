@@ -1,27 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
+import Course from '@/models/Course';
 import { hashPassword } from '@/lib/auth';
 import { generateEmail, generateTemporaryPassword } from '@/lib/utils';
 
-export async function GET(req: NextRequest) {
-  await dbConnect();
-  const { searchParams } = new URL(req.url);
-  const roleParam = searchParams.get('role');
-  const department = searchParams.get('department');
-  
-  const query: any = {};
-  
-  if (roleParam) {
-    const roles = roleParam.split(',').map(r => r.trim().toUpperCase());
-    query.role = { $in: roles };
-  }
-  if (department) query.department = department;
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const roles = searchParams.get('role')?.split(',') || [];
 
-  const users = await User.find(query)
-    .select('-password')
-    .populate('department', 'name code');
-  return NextResponse.json(users);
+    const users = await User.find({ role: { $in: ['PROFESSOR', 'TA'] } })
+      .populate('department')
+      .lean();
+
+    const userIds = users.map(u => u._id);
+    const allCourses = await Course.find({
+      instructor: { $in: userIds }
+    }).lean();
+    const staffWithCourses = users.map(user => {
+      return {
+        ...user,
+        courses: allCourses.filter(course =>
+          course.instructor?.toString() === user._id.toString()
+        )
+      };
+    });
+
+    return NextResponse.json(staffWithCourses);
+  }
+  catch (error: any) {
+    return NextResponse.json({ error: error.message || 'Failed to fetch users' }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {

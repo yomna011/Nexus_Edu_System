@@ -7,7 +7,7 @@ export interface IAnnouncement {
   targetAudience: ('STUDENT' | 'PROFESSOR' | 'TA' | 'ADMIN' | 'ALL')[];
   author: mongoose.Types.ObjectId;
   expiresAt?: Date;
-  isActive: boolean;
+  isactive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,7 +20,7 @@ const AnnouncementSchema = new Schema<IAnnouncement>(
     targetAudience: [{ type: String, enum: ['STUDENT', 'PROFESSOR', 'TA', 'ADMIN', 'ALL'] }],
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     expiresAt: { type: Date },
-    isActive: { type: Boolean, default: true },
+    isactive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

@@ -13,7 +13,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const data = await req.json();
   
   // If activating, ensure only one registration term
-  if (data.status === 'ACTIVE') {
+  if (data.status === 'active') {
     await Semester.updateMany(
       { isRegistrationTerm: true },
       { isRegistrationTerm: false }

@@ -77,7 +77,7 @@ export default function DirectoryPage() {
             <SelectValue placeholder="All Departments" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="ALL">All Departments</SelectItem>  {/* Changed '' → 'ALL' */}
+            <SelectItem value="ALL">All Departments</SelectItem> 
             {departments.map((dept: any) => (
               <SelectItem key={dept._id} value={dept._id}>
                 {dept.name}

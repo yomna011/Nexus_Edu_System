@@ -24,7 +24,7 @@ export default function AnnouncementsPage() {
     type: 'INFO',
     targetAudience: ['ALL'],
     expiresAt: '',
-    isActive: true,
+    isactive: true,
   });
 
   const fetchAnnouncements = async () => {
@@ -58,7 +58,7 @@ export default function AnnouncementsPage() {
       toast.success(editing ? 'Announcement updated' : 'Announcement created');
       setOpen(false);
       setEditing(null);
-      setForm({ title: '', message: '', type: 'INFO', targetAudience: ['ALL'], expiresAt: '', isActive: true });
+      setForm({ title: '', message: '', type: 'INFO', targetAudience: ['ALL'], expiresAt: '', isactive: true });
       fetchAnnouncements();
     } else {
       toast.error('Failed to save announcement');
@@ -84,7 +84,7 @@ export default function AnnouncementsPage() {
       type: ann.type,
       targetAudience: ann.targetAudience,
       expiresAt: ann.expiresAt ? new Date(ann.expiresAt).toISOString().split('T')[0] : '',
-      isActive: ann.isActive,
+      isactive: ann.isactive,
     });
     setOpen(true);
   };
@@ -143,8 +143,8 @@ export default function AnnouncementsPage() {
                   <Input type="date" value={form.expiresAt} onChange={e => setForm({...form, expiresAt: e.target.value})} />
                 </div>
                 <div className="flex items-center space-x-2 pt-6">
-                  <Switch checked={form.isActive} onCheckedChange={v => setForm({...form, isActive: v})} />
-                  <Label>Active</Label>
+                  <Switch checked={form.isactive} onCheckedChange={v => setForm({...form, isactive: v})} />
+                  <Label>active</Label>
                 </div>
               </div>
               <Button type="submit">{editing ? 'Update' : 'Create'}</Button>
@@ -183,8 +183,8 @@ export default function AnnouncementsPage() {
                   <TableCell>{ann.targetAudience.join(', ')}</TableCell>
                   <TableCell>{ann.expiresAt ? new Date(ann.expiresAt).toLocaleDateString() : 'Never'}</TableCell>
                   <TableCell>
-                    <Badge variant={ann.isActive ? 'default' : 'secondary'}>
-                      {ann.isActive ? 'Active' : 'Inactive'}
+                    <Badge variant={ann.isactive ? 'default' : 'secondary'}>
+                      {ann.isactive ? 'active' : 'inactive'}
                     </Badge>
                   </TableCell>
                   <TableCell>
