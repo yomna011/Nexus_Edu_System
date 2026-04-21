@@ -19,8 +19,9 @@ export async function POST(req: NextRequest) {
         { status: 403 }
       );
     }
+const isValid = await verifyPassword(password, user.password);
 
-    const isValid = await verifyPassword(password, user.password);
+console.log("Password match:", isValid);
     if (!isValid) {
       user.failedLoginAttempts += 1;
       if (user.failedLoginAttempts >= 5) {
