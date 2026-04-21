@@ -1,15 +1,17 @@
-export const runtime = 'nodejs'; // 👈 Must be the very first line
+export const runtime = 'nodejs'; 
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/auth';
+import dbConnect from './lib/db';
+import User from '@/models/User';
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const { pathname } = request.nextUrl;
 
   // Public paths that don't require authentication
-  const publicPaths = ['/auth/login', '/set-password'];
+  const publicPaths = ['/auth/login', '/auth/set-password'];
   if (publicPaths.includes(pathname)) {
     return NextResponse.next();
   }
@@ -23,6 +25,13 @@ export async function middleware(request: NextRequest) {
   const decoded = verifyToken(token);
   if (!decoded) {
     return NextResponse.redirect(new URL('/auth/login', request.url));
+  }
+  
+  await dbConnect();
+  const user = await User.findById(decoded.userId);
+
+  if (user?.forcePasswordChange && pathname !== '/auth/set-password') {
+  return NextResponse.redirect(new URL('/auth/set-password', request.url));
   }
 
   // Role-based access control
@@ -42,7 +51,7 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/portal/:path*',
-    '/set-password',
+    '/auth/set-password',
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
