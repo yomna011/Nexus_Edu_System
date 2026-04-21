@@ -39,7 +39,7 @@ export default function LoginPage() {
 
       // Redirect based on password change requirement and role
       if (data.user.forcePasswordChange) {
-        router.push('/set-password');
+        router.push('/auth/set-password');
       } else {
         const rolePath = 
           data.user.role === 'STUDENT' ? '/portal/student' :
