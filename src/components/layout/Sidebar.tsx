@@ -16,7 +16,7 @@ import {
    DoorOpen,
    Megaphone,
    FileText, 
-   Clock
+ Clock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -34,8 +34,9 @@ const adminNav: NavItem[] = [
   { name: 'Courses', href: '/portal/admin/courses', icon: BookOpen },
   { name: 'Semesters', href: '/portal/admin/semesters', icon: Calendar },
   { name: 'Rooms', href: '/portal/admin/rooms', icon: DoorOpen },
+
    {name: 'Applications', href: '/portal/admin/applications', icon: FileText },
-   { name: 'Announcements', href: '/portal/admin/announcements', icon: Megaphone },
+ { name: 'Announcements', href: '/portal/admin/announcements', icon: Megaphone },
 ];
 
 const studentNav: NavItem[] = [

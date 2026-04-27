@@ -80,9 +80,10 @@ async function seedTestUsers() {
     console.log('Created active semester:', semester.name);
   }
 
+
   
 console.log('Applications seeded');
-  // Sample Courses 
+// Sample Courses 
   const coursesData = [
     {
       code: 'CS101',
@@ -164,7 +165,7 @@ await Application.insertMany([
 
 
 console.log('Applications seeded');
-  // Professor
+ // Professor
   const professorPassword = await bcrypt.hash('Professor123!', 10);
   const professor = await User.findOneAndUpdate(
     { email: 'professor@nexusedu.edu' },
@@ -198,8 +199,7 @@ console.log('Applications seeded');
   );
   console.log('TA user ready:', ta.email);
 
-
-  // ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
   // 3. Assign courses to Professor and TA (optional)
   // ------------------------------------------------------------------------
   if (cs101 && cs201) {

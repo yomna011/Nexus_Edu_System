@@ -180,6 +180,7 @@ export default function AdminDashboard() {
       icon: Calendar,
       color: 'bg-orange-100 text-orange-600',
     },
+
     {
       title: 'Applications',
       description: 'Review submitted applications',
@@ -187,7 +188,7 @@ export default function AdminDashboard() {
       icon: ClipboardList,
       color: 'bg-red-100 text-red-600',
     }
-  ];
+];
 
   return (
     <div className="p-6 space-y-8">
