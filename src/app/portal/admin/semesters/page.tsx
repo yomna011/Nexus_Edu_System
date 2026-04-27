@@ -53,19 +53,23 @@ export default function SemestersPage() {
     }
   };
 
-  const handleActivate = async (id: string) => {
-    const res = await fetch(`/api/semesters/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: 'active' }),
-    });
-    if (res.ok) {
-      toast.success('Semester activated');
-      fetchSemesters();
-    } else {
-      toast.error('Failed to activate semester');
-    }
-  };
+const handleActivate = async (id: string) => {
+  const res = await fetch(`/api/semesters/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: 'active' }),
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    toast.success('Semester activated');
+    fetchSemesters();
+  } else {
+    toast.error(data.error || 'Failed to activate semester');
+    fetchSemesters();
+  }
+};
 
   return (
     <div className="space-y-6">
@@ -139,16 +143,16 @@ export default function SemestersPage() {
                   <TableCell>{sem.termType}</TableCell>
                   <TableCell>{formatDate(sem.startDate)} - {formatDate(sem.endDate)}</TableCell>
                   <TableCell>
-                    <Badge variant={sem.status === 'active' ? 'default' : 'secondary'}>
-                      {sem.status}
-                    </Badge>
+                      <Badge variant={sem.status?.toLowerCase() === 'active' ? 'default' : 'secondary'}>
+                        {sem.status}
+                      </Badge>
                   </TableCell>
                   <TableCell>
-                    {sem.status === 'DRAFT' && (
-                      <Button size="sm" onClick={() => handleActivate(sem._id)}>
-                        <CheckCircle className="mr-1 h-4 w-4" /> Activate
-                      </Button>
-                    )}
+                      {sem.status?.toLowerCase() === 'draft' && (
+                        <Button size="sm" onClick={() => handleActivate(sem._id)}>
+                          <CheckCircle className="mr-1 h-4 w-4" /> Activate
+                        </Button>
+                      )}
                   </TableCell>
                 </TableRow>
               ))}
