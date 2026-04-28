@@ -10,6 +10,7 @@ import Department from '../src/models/Department';
 import Room from '../src/models/Room';
 import Semester from '../src/models/Semester';
 import Course from '../src/models/Course';
+import Enrollment from '../src/models/Enrollment';
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
@@ -198,10 +199,31 @@ async function seedTestUsers() {
   }
 
   // ------------------------------------------------------------------------
-  // 4. (Optional) Enroll student in some courses for testing
+  // 4. Enroll student in some courses for testing GPA
   // ------------------------------------------------------------------------
-  // This would require an Enrollment model; skipping for brevity.
-  // If you have a Cart/Enrollment mechanism, you could add it here.
+  
+  if (cs101 && cs201 && math101) {
+    // Make CS201 an Honors course for testing the extra 0.5 weight
+    await Course.findByIdAndUpdate(cs201._id, { isHonors: true });
+    
+    const enrollments = [
+      { student: student._id, course: cs101._id, semester: semester._id, status: 'COMPLETED', grade: 'A' }, // 4.0 * 3 = 12
+      { student: student._id, course: cs201._id, semester: semester._id, status: 'COMPLETED', grade: 'B+' }, // (3.3 + 0.5) * 4 = 15.2
+      { student: student._id, course: math101._id, semester: semester._id, status: 'COMPLETED', grade: 'C' }  // 2.0 * 4 = 8
+    ];
+    // Total Quality Points = 12 + 15.2 + 8 = 35.2
+    // Total Credits = 3 + 4 + 4 = 11
+    // GPA = 35.2 / 11 = 3.20
+
+    for (const enr of enrollments) {
+      await Enrollment.findOneAndUpdate(
+        { student: enr.student, course: enr.course, semester: enr.semester },
+        enr,
+        { upsert: true }
+      );
+    }
+    console.log('Seeded Enrollments with Grades for testing GPA');
+  }
 
   await mongoose.disconnect();
   console.log('Seeding test users completed.');
