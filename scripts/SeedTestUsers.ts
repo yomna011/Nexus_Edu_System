@@ -11,6 +11,7 @@ import Room from '../src/models/Room';
 import Semester from '../src/models/Semester';
 import Course from '../src/models/Course';
 import Enrollment from '../src/models/Enrollment';
+import Application from '../src/models/Applications';
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
@@ -80,7 +81,10 @@ async function seedTestUsers() {
     console.log('Created active semester:', semester.name);
   }
 
-  // Sample Courses 
+
+  
+console.log('Applications seeded');
+// Sample Courses 
   const coursesData = [
     {
       code: 'CS101',
@@ -145,7 +149,24 @@ async function seedTestUsers() {
   );
   console.log('Student user ready:', student.email);
 
-  // Professor
+  await Application.deleteMany({});
+
+await Application.insertMany([
+  {
+    student: student._id,
+    status: 'SUBMITTED',
+    submissionDate: new Date(),
+  },
+  {
+    student: student._id,
+    status: 'SUBMITTED',
+    submissionDate: new Date('2026-04-20'),
+  }
+]);
+
+
+console.log('Applications seeded');
+ // Professor
   const professorPassword = await bcrypt.hash('Professor123!', 10);
   const professor = await User.findOneAndUpdate(
     { email: 'professor@nexusedu.edu' },
@@ -179,7 +200,7 @@ async function seedTestUsers() {
   );
   console.log('TA user ready:', ta.email);
 
-  // ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
   // 3. Assign courses to Professor and TA (optional)
   // ------------------------------------------------------------------------
   if (cs101 && cs201) {
