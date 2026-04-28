@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import Application from '@/models/Applications';
 import { getSession } from '@/lib/auth';
+import { sendStatusEmail } from "@/lib/email";
 
 // ================= GET =================
 export async function GET(req: Request) {
@@ -56,7 +57,10 @@ export async function PATCH(req: Request) {
       },
     },
     { new: true }
-  );
+  ).populate('student', 'name email');
 
+  if (updated) {
+  await sendStatusEmail(updated);
+}
   return NextResponse.json(updated);
 }
