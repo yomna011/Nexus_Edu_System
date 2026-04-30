@@ -15,10 +15,10 @@ export async function GET() {
 
     await dbConnect();
 
-    // Fetch all enrollments for the student that are COMPLETED (or all that have grades)
-    // We populate both course and semester
+    // Fetch all enrollments for the student that are OFFICIAL
     const enrollments = await Enrollment.find({
       student: session._id,
+      gradeStatus: "OFFICIAL",
       grade: { $exists: true, $ne: null },
     })
       .populate({ path: "course", model: Course })
@@ -58,6 +58,12 @@ export async function GET() {
         (sum, enr) => sum + (enr.course.creditHours || 0),
         0,
       ),
+      courses: data.enrollments.map((enr) => ({
+        id: enr.course._id,
+        name: enr.course.name,
+        code: enr.course.code,
+        grade: enr.grade,
+      })),
     }));
 
     // Sort semesterBreakdown by academicYear then termType (approximate start date)

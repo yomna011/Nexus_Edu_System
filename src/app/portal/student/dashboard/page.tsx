@@ -332,6 +332,75 @@ export default function StudentDashboard() {
           </CardContent>
         </Card>
 
+        {/* Recently Verified Grades */}
+        <Card className="lg:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div>
+              <CardTitle>Recently Verified Grades</CardTitle>
+              <CardDescription>
+                Your finalized grades from previous semesters
+              </CardDescription>
+            </div>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/portal/student/gpa">
+                View All <ArrowRight className="ml-1 h-4 w-4" />
+              </Link>
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {loading ? (
+              <div className="space-y-3">
+                <Skeleton className="h-16 w-full" />
+                <Skeleton className="h-16 w-full" />
+              </div>
+            ) : gpaData?.semesterBreakdown?.length > 0 ? (
+              <div className="space-y-3">
+                {gpaData.semesterBreakdown
+                  .slice()
+                  .reverse()[0]
+                  .courses.slice(0, 3)
+                  .map((course: any) => (
+                    <div
+                      key={course.id}
+                      className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="rounded-full bg-green-500/10 p-2">
+                          <GraduationCap className="h-5 w-5 text-green-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium">{course.name}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {course.code}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="font-bold">
+                        {course.grade}
+                      </Badge>
+                    </div>
+                  ))}
+                {gpaData.semesterBreakdown.slice().reverse()[0].courses.length >
+                  3 && (
+                  <p className="text-xs text-center text-muted-foreground pt-2">
+                    Showing 3 of{" "}
+                    {gpaData.semesterBreakdown.slice().reverse()[0].courses.length}{" "}
+                    verified grades
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <GraduationCap className="mx-auto h-12 w-12 text-muted-foreground mb-4 opacity-50" />
+                <h3 className="font-semibold mb-2">No verified grades yet</h3>
+                <p className="text-sm text-muted-foreground">
+                  Your official grades will appear here once they are finalized.
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Right Column - Announcements & Deadlines */}
         <div className="space-y-6">
           {/* Important Deadlines */}
