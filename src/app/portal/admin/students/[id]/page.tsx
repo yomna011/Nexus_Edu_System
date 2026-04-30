@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button';
 export default function StudentProfilePage() {
   const params = useParams();
   const router = useRouter();
-  // In Next.js 15, params can be a promise in some contexts, but usually unrolling works fine. 
-  // Next 14 handles it fine. Let's extract safely.
+
   const id = params.id as string;
 
   const [student, setStudent] = useState<any>(null);
@@ -102,7 +101,7 @@ export default function StudentProfilePage() {
               </div>
             </div>
           </div>
-          
+
           {/* Personal Details */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold flex items-center gap-2">
