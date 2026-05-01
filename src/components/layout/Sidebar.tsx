@@ -29,6 +29,7 @@ interface NavItem {
 
 const adminNav: NavItem[] = [
   { name: 'Dashboard', href: '/portal/admin/dashboard', icon: LayoutDashboard },
+  { name: 'Search Students', href: '/portal/admin/students', icon: Users },
   { name: 'Departments', href: '/portal/admin/departments', icon: Building2 },
   { name: 'Provision User', href: '/portal/admin/users/provision', icon: UserPlus },
   { name: 'Courses', href: '/portal/admin/courses', icon: BookOpen },

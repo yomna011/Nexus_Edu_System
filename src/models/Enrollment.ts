@@ -7,6 +7,7 @@ export interface IEnrollment {
   enrollmentDate: Date;
   status: 'ENROLLED' | 'DROPPED' | 'COMPLETED';
   grade?: string;
+  gradeStatus?: 'IN_PROGRESS' | 'OFFICIAL';
 }
 
 const EnrollmentSchema = new Schema<IEnrollment>(
@@ -17,6 +18,7 @@ const EnrollmentSchema = new Schema<IEnrollment>(
     enrollmentDate: { type: Date, default: Date.now },
     status: { type: String, enum: ['ENROLLED', 'DROPPED', 'COMPLETED'], default: 'ENROLLED' },
     grade: { type: String },
+    gradeStatus: { type: String, enum: ['IN_PROGRESS', 'OFFICIAL'], default: 'IN_PROGRESS' },
   },
   { timestamps: true }
 );

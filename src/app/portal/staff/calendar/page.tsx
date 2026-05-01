@@ -28,6 +28,9 @@ export default function RoomCalendarPage() {
     startTime: '',
     endTime: '',
     course: '',
+    isRecurring: false,
+    recurringEndDate: '',
+    recurringDays: [] as number[],
   });
   const [loading, setLoading] = useState(false);
 
@@ -97,8 +100,8 @@ export default function RoomCalendarPage() {
   const handleSelectSlot = ({ start, end }: any) => {
     setForm({
       ...form,
-      startTime: start.toISOString().slice(0, 16),
-      endTime: end.toISOString().slice(0, 16),
+      startTime: moment(start).format('YYYY-MM-DDTHH:mm'),
+      endTime: moment(end).format('HH:mm'),
     });
     setOpen(true);
   };
@@ -110,17 +113,22 @@ export default function RoomCalendarPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    const startDatePart = form.startTime.split('T')[0];
+    const fullEndTime = form.endTime.includes('T') ? form.endTime : `${startDatePart}T${form.endTime}`;
+    const payload = { ...form, endTime: fullEndTime };
+
     try {
       const res = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok) {
         toast.success('Room booked successfully');
         setOpen(false);
-        setForm({ room: '', title: '', description: '', startTime: '', endTime: '', course: '' });
+        setForm({ room: '', title: '', description: '', startTime: '', endTime: '', course: '', isRecurring: false, recurringEndDate: '', recurringDays: [] });
         fetchData();
       } else {
         toast.error(data.error || 'Booking failed');
@@ -199,13 +207,67 @@ export default function RoomCalendarPage() {
                 </div>
                 <div>
                   <Label>End Time</Label>
-                  <Input type="datetime-local" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} required />
+                  <Input type="time" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} required />
                 </div>
               </div>
               <div>
                 <Label>Course (optional)</Label>
                 <Input value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })} placeholder="Course ID" />
               </div>
+
+              <div className="flex items-center space-x-2 pt-2">
+                <input 
+                  type="checkbox" 
+                  id="isRecurring" 
+                  checked={form.isRecurring} 
+                  onChange={(e) => setForm({ ...form, isRecurring: e.target.checked })}
+                  className="h-4 w-4 rounded border-gray-300"
+                />
+                <Label htmlFor="isRecurring" className="cursor-pointer">Book multiple recurring days</Label>
+              </div>
+
+              {form.isRecurring && (
+                <div className="space-y-4 p-4 border rounded-md bg-slate-50">
+                  <div>
+                    <Label>Recurrence End Date</Label>
+                    <Input 
+                      type="date" 
+                      value={form.recurringEndDate} 
+                      onChange={(e) => setForm({ ...form, recurringEndDate: e.target.value })} 
+                      required={form.isRecurring} 
+                    />
+                  </div>
+                  <div>
+                    <Label>Days of the Week</Label>
+                    <div className="flex flex-wrap gap-4 mt-2">
+                      {[
+                        { label: 'Mon', value: 1 },
+                        { label: 'Tue', value: 2 },
+                        { label: 'Wed', value: 3 },
+                        { label: 'Thu', value: 4 },
+                        { label: 'Fri', value: 5 },
+                        { label: 'Sat', value: 6 },
+                        { label: 'Sun', value: 0 },
+                      ].map((day) => (
+                        <label key={day.value} className="flex items-center space-x-1 cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            checked={form.recurringDays.includes(day.value)}
+                            onChange={(e) => {
+                              const newDays = e.target.checked 
+                                ? [...form.recurringDays, day.value]
+                                : form.recurringDays.filter(d => d !== day.value);
+                              setForm({ ...form, recurringDays: newDays });
+                            }}
+                          />
+                          <span className="text-sm">{day.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <Button type="submit" className="w-full" disabled={loading}>{loading ? 'Booking...' : 'Confirm Booking'}</Button>
             </form>
           </DialogContent>

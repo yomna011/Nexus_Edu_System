@@ -151,12 +151,34 @@ export default function StudentGPAPage() {
                       Course Grades
                     </h4>
                     <div className="grid gap-3">
-                      {/* Assuming API could be updated to send course grades if needed, for now we list placeholders or actual data if we exposed it */}
-                      <p className="text-sm flex items-center text-muted-foreground gap-2">
-                        <AlertCircle className="w-4 h-4" />
-                        Detailed course grades are available on your unofficial
-                        transcript.
-                      </p>
+                      {sem.courses?.length > 0 ? (
+                        sem.courses.map((course: any) => (
+                          <div
+                            key={course.id}
+                            className="flex items-center justify-between p-3 rounded-lg border bg-background/50"
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-medium text-sm">
+                                {course.name}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                {course.code}
+                              </span>
+                            </div>
+                            <Badge
+                              variant="secondary"
+                              className="font-bold text-sm"
+                            >
+                              {course.grade}
+                            </Badge>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-sm flex items-center text-muted-foreground gap-2">
+                          <AlertCircle className="w-4 h-4" />
+                          No official course grades available for this semester.
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
