@@ -38,7 +38,3 @@ next-env.d.ts
 
 # environment variables
 .env.*
-
-#dont know who added it :))
-AGENTS.md
-CLAUDE.md
